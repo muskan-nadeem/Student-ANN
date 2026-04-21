@@ -118,19 +118,16 @@ def make_visuals(attendance, assignment, quiz, mid, study_hours, pass_prob, pred
 
     gs = gridspec.GridSpec(2, 3, figure=fig, hspace=0.45, wspace=0.35)
 
-    # ── Graph 1: Bar Chart ──────────────────────────────────────
     ax1 = fig.add_subplot(gs[0, :2])
     x = np.arange(len(FEATURES))
     w = 0.25
     b1 = ax1.bar(x - w, student_vals, w, label="Your Student", color=PURPLE, alpha=0.9, zorder=3)
-    b2 = ax1.bar(x,     pass_avg,     w, label="Pass Avg",     color=GREEN,  alpha=0.8, zorder=3)
-    b3 = ax1.bar(x + w, fail_avg,     w, label="Fail Avg",     color=RED,    alpha=0.6, zorder=3)
-
+    ax1.bar(x,     pass_avg, w, label="Pass Avg", color=GREEN,  alpha=0.8, zorder=3)
+    ax1.bar(x + w, fail_avg, w, label="Fail Avg", color=RED,    alpha=0.6, zorder=3)
     for bar in b1:
         ax1.text(bar.get_x() + bar.get_width()/2, bar.get_height() + 0.8,
                  f"{bar.get_height():.0f}", ha="center", va="bottom",
                  fontsize=8, fontweight="bold", color=PURPLE)
-
     ax1.set_xticks(x)
     ax1.set_xticklabels(FEATURES, fontsize=10)
     ax1.set_ylabel("Score", fontsize=10)
@@ -141,7 +138,6 @@ def make_visuals(attendance, assignment, quiz, mid, study_hours, pass_prob, pred
     ax1.grid(axis="y", alpha=0.4, zorder=0)
     ax1.spines[["top", "right"]].set_visible(False)
 
-    # ── Graph 2: Gauge ──────────────────────────────────────────
     ax2 = fig.add_subplot(gs[0, 2], aspect="equal")
     gauge_color = GREEN if pass_prob >= 0.5 else RED
     theta2 = 180 - (pass_prob * 180)
@@ -161,7 +157,6 @@ def make_visuals(attendance, assignment, quiz, mid, study_hours, pass_prob, pred
     ax2.axis("off")
     ax2.set_title("Result", fontsize=12, fontweight="bold", color="#1E293B", pad=10)
 
-    # ── Graph 3: Radar Chart ────────────────────────────────────
     ax3 = fig.add_subplot(gs[1, 0], polar=True)
     angles = np.linspace(0, 2 * np.pi, len(FEATURES), endpoint=False).tolist()
     angles += angles[:1]
@@ -169,7 +164,6 @@ def make_visuals(attendance, assignment, quiz, mid, study_hours, pass_prob, pred
     s_norm  = [v/m for v, m in zip(student_vals, maxvals)] + [student_vals[0]/maxvals[0]]
     p_norm  = [v/m for v, m in zip(pass_avg,     maxvals)] + [pass_avg[0]/maxvals[0]]
     f_norm  = [v/m for v, m in zip(fail_avg,     maxvals)] + [fail_avg[0]/maxvals[0]]
-
     ax3.plot(angles, s_norm, "o-",  linewidth=2,   color=PURPLE, label="Student")
     ax3.fill(angles, s_norm, alpha=0.25, color=PURPLE)
     ax3.plot(angles, p_norm, "s--", linewidth=1.5, color=GREEN,  label="Pass Avg")
@@ -183,17 +177,14 @@ def make_visuals(attendance, assignment, quiz, mid, study_hours, pass_prob, pred
     ax3.set_facecolor("#F8FAFC")
     ax3.grid(color="#CBD5E1", alpha=0.5)
 
-    # ── Graph 4: Horizontal Score Bars ──────────────────────────
     ax4 = fig.add_subplot(gs[1, 1])
     colors_bar = [BLUE, PURPLE, PINK, GREEN, "#F59E0B"]
     maxvals2   = [100, 100, 100, 100, 20]
     pcts       = [v/m*100 for v, m in zip(student_vals, maxvals2)]
-
     bars = ax4.barh(FEATURES, pcts, color=colors_bar, alpha=0.85, height=0.55)
     for bar, pct in zip(bars, pcts):
         ax4.text(min(pct + 1, 96), bar.get_y() + bar.get_height()/2,
                  f"{pct:.0f}%", va="center", fontsize=9, fontweight="bold")
-
     ax4.set_xlim(0, 110)
     ax4.set_xlabel("Score %", fontsize=9)
     ax4.set_title("Score Breakdown", fontsize=12, fontweight="bold", color="#1E293B", pad=10)
@@ -203,7 +194,6 @@ def make_visuals(attendance, assignment, quiz, mid, study_hours, pass_prob, pred
     ax4.axvline(x=80, color=GREEN, linestyle="--", alpha=0.6, linewidth=1)
     ax4.text(81, -0.5, "Good", fontsize=7, color=GREEN)
 
-    # ── Graph 5: Donut Chart ────────────────────────────────────
     ax5 = fig.add_subplot(gs[1, 2])
     pass_count = int(df["result"].sum())
     fail_count = len(df) - pass_count
@@ -221,7 +211,6 @@ def make_visuals(attendance, assignment, quiz, mid, study_hours, pass_prob, pred
     for at in autotexts:
         at.set_fontweight("bold")
         at.set_fontsize(11)
-
     student_angle = 90 + (pass_prob * 360)
     rad = np.radians(student_angle)
     ax5.plot(0.63 * np.cos(rad), 0.63 * np.sin(rad),
@@ -234,15 +223,11 @@ def make_visuals(attendance, assignment, quiz, mid, study_hours, pass_prob, pred
     return fig
 
 
-# ═══════════════════════════════════════════
 # MAIN UI
-# ═══════════════════════════════════════════
-
 st.markdown('<p class="main-title">🎓 Student Performance Evaluator</p>', unsafe_allow_html=True)
 st.markdown('<p style="color:#64748B;margin-top:-10px">ANN-powered · Advanced Analytics · Pass / Fail Prediction</p>', unsafe_allow_html=True)
 st.divider()
 
-# Sidebar
 with st.sidebar:
     st.markdown("### 📌 Model Info")
     st.markdown(f"**Accuracy:** `{accuracy*100:.1f}%`")
@@ -269,10 +254,8 @@ with st.sidebar:
 
 tab1, tab2 = st.tabs(["🔮 Predict & Analyze", "📈 Model Report"])
 
-# ── TAB 1 ───────────────────────────────────
 with tab1:
     st.markdown("#### ✏️ Enter Student Details")
-
     col1, col2, col3 = st.columns(3)
     with col1:
         attendance  = st.slider("🏫 Attendance (%)",   0,   100, 75)
@@ -283,8 +266,7 @@ with tab1:
     with col3:
         study_hours = st.slider("⏰ Study Hours/Week",  0.0, 20.0, 5.0, step=0.5)
         st.markdown("<br>", unsafe_allow_html=True)
-        predict_btn = st.button("🔮 Predict & Show Analysis",
-                                use_container_width=True, type="primary")
+        predict_btn = st.button("🔮 Predict & Show Analysis", use_container_width=True, type="primary")
 
     if predict_btn:
         pred, pass_prob, confidence, band = evaluate_student(
@@ -313,7 +295,6 @@ with tab1:
             </div>""", unsafe_allow_html=True)
 
         st.markdown("<br>", unsafe_allow_html=True)
-
         m1, m2, m3, m4 = st.columns(4)
         m1.metric("🎯 Pass Probability", f"{pass_prob*100:.1f}%")
         m2.metric("💡 Confidence",       f"{confidence*100:.1f}%")
@@ -329,22 +310,23 @@ with tab1:
         st.markdown("### 💡 Improvement Tips")
         tips = []
         if attendance  < 75: tips.append("📅 Improve your attendance above 75%")
-if assignment  < 60: tips.append("📄 Complete your assignments properly")
-if quiz        < 50: tips.append("📝 Focus more on quiz preparation")
-if mid         < 50: tips.append("📚 Study harder for mid-term exams")
-if study_hours < 4:  tips.append("⏰ Dedicate at least 1 hour of study daily")
+        if assignment  < 60: tips.append("📄 Complete your assignments properly")
+        if quiz        < 50: tips.append("📝 Focus more on quiz preparation")
+        if mid         < 50: tips.append("📚 Study harder for mid-term exams")
+        if study_hours < 4:  tips.append("⏰ Dedicate at least 1 hour of study daily")
 
         if tips:
             t1, t2 = st.columns(2)
             half = len(tips)//2 + len(tips)%2
             with t1:
-                for t in tips[:half]:  st.warning(t)
+                for t in tips[:half]:
+                    st.warning(t)
             with t2:
-                for t in tips[half:]:  st.warning(t)
+                for t in tips[half:]:
+                    st.warning(t)
         else:
             st.success("🎉 Excellent! Student performance is great!")
 
-# ── TAB 2 ───────────────────────────────────
 with tab2:
     st.markdown("#### 🎯 Classification Report")
     st.code(report)
