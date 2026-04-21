@@ -342,7 +342,7 @@ if study_hours < 4:  tips.append("⏰ Dedicate at least 1 hour of study daily")
             with t2:
                 for t in tips[half:]:  st.warning(t)
         else:
-            st.success("🎉 Excellent! Student ki performance bahut achi hai!")
+            st.success("🎉 Excellent! Student performance is great!")
 
 # ── TAB 2 ───────────────────────────────────
 with tab2:
