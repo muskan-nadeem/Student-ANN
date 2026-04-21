@@ -239,7 +239,7 @@ def make_visuals(attendance, assignment, quiz, mid, study_hours, pass_prob, pred
 # ═══════════════════════════════════════════
 
 st.markdown('<p class="main-title">🎓 Student Performance Evaluator</p>', unsafe_allow_html=True)
-st.markdown('<p style="color:#64748B;margin-top:-10px">ANN-powered · Beautiful Analytics · Pass / Fail Prediction</p>', unsafe_allow_html=True)
+st.markdown('<p style="color:#64748B;margin-top:-10px">ANN-powered · Advanced Analytics · Pass / Fail Prediction</p>', unsafe_allow_html=True)
 st.divider()
 
 # Sidebar
@@ -328,11 +328,11 @@ with tab1:
         st.markdown("---")
         st.markdown("### 💡 Improvement Tips")
         tips = []
-        if attendance  < 75: tips.append("📅 Attendance 75% se upar lao")
-        if assignment  < 60: tips.append("📄 Assignments properly complete karo")
-        if quiz        < 50: tips.append("📝 Quiz preparation improve karo")
-        if mid         < 50: tips.append("📚 Mid-term ke liye zyada study karo")
-        if study_hours < 4:  tips.append("⏰ Rozana kam se kam 1 ghanta extra parho")
+        if attendance  < 75: tips.append("📅 Improve your attendance above 75%")
+if assignment  < 60: tips.append("📄 Complete your assignments properly")
+if quiz        < 50: tips.append("📝 Focus more on quiz preparation")
+if mid         < 50: tips.append("📚 Study harder for mid-term exams")
+if study_hours < 4:  tips.append("⏰ Dedicate at least 1 hour of study daily")
 
         if tips:
             t1, t2 = st.columns(2)
@@ -387,4 +387,4 @@ with tab2:
     """)
 
 st.divider()
-st.caption("🎓 ANN Student Evaluator · scikit-learn · Streamlit · Made with ❤️")
+st.caption("🎓 Built by Muskan Nadeem · AI & Machine Learning Project · 2026")
